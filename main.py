@@ -124,62 +124,12 @@ def take_turn(direc, board):
 
 # detect if no move available => game over
 def is_game_over(board):
-    copy_board = board
-
-    merged = [[False for _ in range(4)] for _ in range(4)]
     for i in range(4):
         for j in range(4):
-            shift = 0
-            if i>0:
-                for q in range(i):
-                    if board[q][j]==0:
-                        shift += 1
-                if shift>0:
-                    return False
-                if i-shift-1>=0 and board[i-shift-1][j]==board[i-shift][j] and not merged[i-shift-1][j]:
-                    return False
-
-    merged = [[False for _ in range(4)] for _ in range(4)]
-    board = copy_board
-    for i in reversed(range(4)):
-        for j in range(4):
-            shift = 0
-            if i<3:
-                for q in range(i+1, 4):
-                    if board[q][j]==0:
-                        shift += 1
-                if shift>0:
-                    return False
-                if i+shift+1<=3 and board[i+shift+1][j]==board[i+shift][j] and not merged[i+shift+1][j]:
-                    return False
-
-    merged = [[False for _ in range(4)] for _ in range(4)]
-    board = copy_board
-    for i in range(4):
-        for j in range(4):
-            shift = 0
-            if j>0:
-                for q in range(j):
-                    if board[i][q]==0:
-                        shift += 1
-                if shift>0:
-                    return False
-                if j-shift-1>=0 and board[i][j-shift-1]==board[i][j-shift] and not merged[i][j-shift-1]:
-                    return False
-
-    merged = [[False for _ in range(4)] for _ in range(4)]
-    board = copy_board
-    for i in range(4):
-        for j in reversed(range(4)):
-            shift = 0
-            if j<3:
-                for q in range(j+1, 4):
-                    if board[i][q]==0:
-                        shift += 1
-                if shift>0:
-                    return False
-                if j+shift+1<=3 and board[i][j+shift+1]==board[i][j+shift] and not merged[i][j+shift+1]:
-                    return False
+            for r, c in [(i+1, j), (i, j+1)]:
+                if 0<=r<4 and 0<=c<4:
+                    if board[i][j]==board[r][c] or board[r][c]==0 or board[i][j]==0:
+                        return False
     return True
 
 # spawn in new pieces randomly when turns start
