@@ -3,6 +3,9 @@ import random
 
 pygame.init()
 
+icon = pygame.image.load('./2048-icon.png')
+pygame.display.set_icon(icon)
+
 # initial set up
 WIDTH = 400
 HEIGHT = 500
