@@ -3,7 +3,7 @@ import random
 
 pygame.init()
 
-icon = pygame.image.load('./2048-icon.png')
+icon = pygame.image.load('issets/2048-icon.png')
 pygame.display.set_icon(icon)
 
 # initial set up
