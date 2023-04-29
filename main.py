@@ -242,7 +242,7 @@ while run:
                     spawn_new = True
                     score = 0
                     direction = ''
-                    # game_over = False
+                    first_time = True
 
     if score>high_score:
         high_score = score
