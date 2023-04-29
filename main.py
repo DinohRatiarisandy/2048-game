@@ -45,6 +45,7 @@ file_high_score = open('high_score.txt', 'r')
 init_high = int(file_high_score.readline())
 file_high_score.close()
 high_score = init_high
+UP, DOWN, RIGHT, LEFT = 0, 1, 2, 3
 
 # draw game over and restart text
 def draw_over():
@@ -58,72 +59,82 @@ def draw_over():
 def take_turn(direc, board):
     global score
     merged = [[False for _ in range(4)] for _ in range(4)]
-    if direc=='UP':
+    can_move = [0, 0, 0, 0]
+
+    if direc==UP:
         for i in range(4):
             for j in range(4):
                 shift = 0
-                if i>0:
+                if i>0 and board[i][j]:
                     for q in range(i):
                         if board[q][j]==0:
                             shift += 1
                     if shift>0:
                         board[i-shift][j] = board[i][j]
                         board[i][j] = 0
+                        can_move[direc] = True
                     if i-shift-1>=0 and board[i-shift-1][j]==board[i-shift][j] and not merged[i-shift-1][j]:
                         board[i-shift-1][j] *= 2
                         score += board[i-shift-1][j]
                         board[i-shift][j] = 0
                         merged[i-shift-1][j] = True
-    elif direc=='DOWN':
+                        can_move[direc] = True
+    elif direc==DOWN:
         for i in reversed(range(4)):
             for j in range(4):
                 shift = 0
-                if i<3:
+                if i<3 and board[i][j]:
                     for q in range(i+1, 4):
                         if board[q][j]==0:
                             shift += 1
                     if shift>0:
                         board[i+shift][j] = board[i][j]
                         board[i][j] = 0
+                        can_move[direc] = True
                     if i+shift+1<=3 and board[i+shift+1][j]==board[i+shift][j] and not merged[i+shift+1][j]:
                         board[i+shift+1][j] *= 2
                         score += board[i+shift+1][j]
                         board[i+shift][j] = 0
                         merged[i+shift+1][j] = True
-    elif direc=='LEFT':
+                        can_move[direc] = True
+    elif direc==LEFT:
         for i in range(4):
             for j in range(4):
                 shift = 0
-                if j>0:
+                if j>0 and board[i][j]:
                     for q in range(j):
                         if board[i][q]==0:
                             shift += 1
                     if shift>0:
                         board[i][j-shift] = board[i][j]
                         board[i][j] = 0
+                        can_move[direc] = True
                     if j-shift-1>=0 and board[i][j-shift-1]==board[i][j-shift] and not merged[i][j-shift-1]:
                         board[i][j-shift-1] *= 2
                         score += board[i][j-shift-1]
                         board[i][j-shift] = 0
                         merged[i][j-shift-1] = True
-    elif direc=='RIGHT':
+                        can_move[direc] = True
+    elif direc==RIGHT:
         for i in range(4):
             for j in reversed(range(4)):
                 shift = 0
-                if j<3:
+                if j<3 and board[i][j]:
                     for q in range(j+1, 4):
                         if board[i][q]==0:
                             shift += 1
                     if shift>0:
                         board[i][j+shift] = board[i][j]
                         board[i][j] = 0
+                        can_move[direc] = True
                     if j+shift+1<=3 and board[i][j+shift+1]==board[i][j+shift] and not merged[i][j+shift+1]:
                         board[i][j+shift+1] *= 2
                         score += board[i][j+shift+1]
                         board[i][j+shift] = 0
                         merged[i][j+shift+1] = True
+                        can_move[direc] = True
     
-    return board
+    return board, can_move[direc]
 
 # detect if no move available => game over
 def is_game_over(board):
@@ -194,9 +205,12 @@ while run:
         spawn_new = False
     
     if direction!='':
-        board_values = take_turn(direction, board_values)
+        new_bord, can_move = take_turn(direction, board_values)
+        if can_move:
+            board_values = new_bord
+            spawn_new = True
+
         direction = ''
-        spawn_new = True
     
     if game_over:
         draw_over()
@@ -208,17 +222,17 @@ while run:
     
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
-            run = False    
+            run = False  
 
         if event.type==pygame.KEYUP:
             if event.key==pygame.K_UP:
-                direction = 'UP'
+                direction = UP
             elif event.key==pygame.K_DOWN:
-                direction = 'DOWN'
+                direction = DOWN
             elif event.key==pygame.K_LEFT:
-                direction = 'LEFT'
+                direction = LEFT
             elif event.key==pygame.K_RIGHT:
-                direction = 'RIGHT'
+                direction = RIGHT
             
             if game_over:
                 if event.key==pygame.K_RETURN:
