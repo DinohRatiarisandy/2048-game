@@ -37,7 +37,6 @@ colors = {
 # game variables initialize
 board_values = [[0 for _ in range(4)] for _ in range(4)]
 font = pygame.font.Font('freesansbold.ttf', 24)
-game_over = False
 spawn_new = True
 direction = ''
 score = 0
@@ -45,6 +44,7 @@ file_high_score = open('high_score.txt', 'r')
 init_high = int(file_high_score.readline())
 file_high_score.close()
 high_score = init_high
+first_time = True
 UP, DOWN, RIGHT, LEFT = 0, 1, 2, 3
 
 # draw game over and restart text
@@ -148,13 +148,15 @@ def is_game_over(board):
 
 # spawn in new pieces randomly when turns start
 def new_pieces(board):
-    cnt_new_tiles = 0
+    global first_time
+    cnt_new_tiles = 2 if first_time else 1
+    first_time = False
 
-    while any(0 in row for row in board) and cnt_new_tiles<2:
+    while any(0 in row for row in board) and cnt_new_tiles:
         row = random.randint(0, 3)
         col = random.randint(0, 3)
         if board[row][col]==0:
-            cnt_new_tiles += 1
+            cnt_new_tiles -= 1
             if random.randint(1, 10)==10:
                 board[row][col] = 4
             else:
@@ -240,7 +242,7 @@ while run:
                     spawn_new = True
                     score = 0
                     direction = ''
-                    game_over = True
+                    # game_over = False
 
     if score>high_score:
         high_score = score
