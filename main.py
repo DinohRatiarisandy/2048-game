@@ -12,6 +12,11 @@ class Game_2048:
         pygame.font.init()
         pygame.display.set_caption('2048')
 
+        # logo
+        icon_path = "assets\\2048.png"
+        icon_surface = pygame.image.load(icon_path)
+        pygame.display.set_icon(icon_surface)
+
         # Variables
         self.grid = [[0 for _ in range(N)] for _ in range(N)]
         self.is_over = False
