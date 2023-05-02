@@ -1,6 +1,7 @@
 import pygame
 import random
 from game_constants import COLORS
+from sys import exit
 
 # size of the grid
 N = 4
