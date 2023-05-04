@@ -14,7 +14,7 @@ pygame.init()
 pygame.font.init()
 pygame.display.set_caption('2048')
 
-# logo
+# Icon
 ICON_PATH = "assets\\2048.png"
 icon_surface = pygame.image.load(ICON_PATH)
 pygame.display.set_icon(icon_surface)
@@ -32,6 +32,7 @@ GRID_SIZE = 4
 
 class Game2048:
     """Play the game with all fonctionalities"""
+
     def __init__(self):
         self.grid = [[0 for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
         self.is_over = False
@@ -41,13 +42,15 @@ class Game2048:
         self.high_score = self.find_high_score()
 
     def find_high_score(self):
-        """Find the past high score in high_score.txt"""      
+        """Find the past high score in high_score.txt"""
+
         with open('high_score.txt', 'r', encoding='utf-8') as file:
             self.initial_high_score = int(file.read())
         return self.initial_high_score
 
     def draw_score(self):
         """Draw the score on the screen"""
+
         # Clear the area where scores are displayed
         score_rect = pygame.Rect(10, 410, WINDOW_WIDTH, 40)
         high_score_rect = pygame.Rect(10, 450, WINDOW_WIDTH, 40)
@@ -60,9 +63,10 @@ class Game2048:
         SCREEN.blit(score_text, (10, 410))
         SCREEN.blit(high_score_text, (10, 450))
         pygame.display.flip()
-        
+
     def is_game_over(self):
         """Chech if the player lose. He can't move any of 4 directions"""
+
         for i in range(GRID_SIZE):
             for j in range(GRID_SIZE):
                 for row, col in [(i+1, j), (i, j+1)]:
@@ -74,13 +78,13 @@ class Game2048:
 
         self.is_over = True
         return True
-    
+
     def draw_game_over(self):
         """Print Game over on the screen if the user lose"""
-        # font
+
         font = pygame.font.Font('freesansbold.ttf', 24)
 
-        # rectangle
+        # Create rectangle
         pygame.draw.rect(SCREEN, 'black', [50, 50, 300, 100], 0, 10)
 
         game_over_text1 = font.render('GAME OVER !', True, 'white')
@@ -92,8 +96,10 @@ class Game2048:
         pygame.display.flip()
 
     def new_number(self, k=1):
-        """Add number after each user move"""
+        """Add two/one new numbers after each user move"""
+
         empty_tiles = []
+
         # get free positions in the grid
         for i in range(GRID_SIZE):
             for j in range(GRID_SIZE):
@@ -112,6 +118,7 @@ class Game2048:
 
     def make_move(self, move):
         """Actualise the grid after user move"""
+
         merged = [[False for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
 
         if move in {'l', 'r'}:
@@ -137,7 +144,7 @@ class Game2048:
                             self.moved = True
             if move=='r':
                 self.grid = [row[::-1] for row in self.grid]
-        
+
         elif move in {'u', 'd'}:
             if move=='d':
                 self.grid = self.grid[::-1]
@@ -164,6 +171,7 @@ class Game2048:
 
     def draw_game(self):
         """Draw the board with tile and number"""
+
         # background color
         background_rect = pygame.Rect(0, 0, WINDOW_WIDTH, WINDOW_WIDTH)
         pygame.draw.rect(
@@ -184,7 +192,7 @@ class Game2048:
                 w_rect = WINDOW_WIDTH // GRID_SIZE - 2*SPACE_BETWEEN_TILES
                 h_rect = WINDOW_WIDTH // GRID_SIZE - 2*SPACE_BETWEEN_TILES
                 board_rect = pygame.Rect(pos_x, pos_y, w_rect, h_rect)
-                
+
                 # 2. draw rectangle
                 if val<=2048:
                     tile_color = COLORS[val]
@@ -208,6 +216,7 @@ class Game2048:
 
     def user_move(self):
         """Wait for user move"""
+
         while True:
             for event in pygame.event.get():
                 if event.type==pygame.QUIT:
@@ -233,6 +242,7 @@ class Game2048:
 
     def play(self):
         """Play the game 2048 (main)"""
+
         self.new_number(k=2)
 
         while True:
